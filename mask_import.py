@@ -315,6 +315,7 @@ def create_cpmask_global(
     s : xy size of FOV scans in given units.
     w : number of subgroups, left-right.
     h : number of subgroups, top-bottom.
+    g : save ImageJ txt files for masks.
     """
     # ==================================== access stored masks ====================================
     files = []
@@ -345,12 +346,14 @@ def create_cpmask_global(
 
 def create_cpmask_pngtxt(
         images_f: str,          # file path to the original image folder     (file path)
+        gettxt_g: bool,         # save ImageJ txt files for masks            bool
         sample_d = None         # average (pixel) diameter for all cells     'None' / int
 ):
     """
     Create laser masks for all multichannel images stored in a folder using cellpose 2.
 
     f : file path to the original image folder.
+    g : save ImageJ txt files for masks.
     d : average (pixel) diameter for all cells.
     """
     # ==================================== variable processing ====================================
@@ -416,6 +419,7 @@ def create_cpmask_pngtxt(
         # apply white floodfill for the rest of the image
         ImageDraw.floodfill(msk, blk, 255)
         # remove temporary files, save the new mask image
-        os.remove(txt)
+        if not gettxt_g:
+            os.remove(txt)
         os.remove(ref)
         msk.save(ref)
